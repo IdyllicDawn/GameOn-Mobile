@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottombar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -24,6 +25,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
@@ -82,7 +84,8 @@ class Leaderboard extends StatelessWidget {
                 DataCell(Text(
                   leaderboard.name,
                   style: TextStyle(
-                    color: leaderboard.name == 'You' ? Colors.blue : Colors.black,
+                    color:
+                        leaderboard.name == 'You' ? Colors.blue : Colors.black,
                   ),
                 )),
                 DataCell(Text(leaderboard.device)),
@@ -108,4 +111,30 @@ class LeaderboardEntry {
     required this.device,
     required this.score,
   });
+}
+
+class GameSelect extends StatelessWidget {
+  const GameSelect({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Game Select'),
+        backgroundColor: const Color.fromARGB(255, 87, 179, 255),
+      ),
+      body: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+            const SizedBox(height: 20),
+            Text(
+              'Select a Game',
+              style: Theme.of(context).textTheme.titleLarge,
+            )
+          ])),
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 }
