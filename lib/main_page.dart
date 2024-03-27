@@ -112,10 +112,28 @@ class LeaderboardEntry {
     required this.score,
   });
 }
-
+class TypingButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        // Add your button's onPressed logic here
+        Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondPage()),
+            );
+      },
+      child: Ink.image(image: 
+      const NetworkImage('https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
+      height: 200,
+      width: 200,
+      fit: BoxFit.cover
+      ),
+      );
+  }
+}
 class GameSelect extends StatelessWidget {
   const GameSelect({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,9 +150,24 @@ class GameSelect extends StatelessWidget {
             Text(
               'Select a Game',
               style: Theme.of(context).textTheme.titleLarge,
-            )
+            ),
+            TypingButton(),
           ])),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Type Racer'),
+      ),
+      body: Center(
+        child: Text('Welcome!'),
+      ),
     );
   }
 }
