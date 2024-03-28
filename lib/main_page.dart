@@ -1,3 +1,4 @@
+import 'package:GameOn/login_page.dart';
 import 'package:flutter/material.dart';
 import 'bottombar.dart';
 
@@ -10,6 +11,17 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home Page'),
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
+        actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.logout), 
+              onPressed: () {
+                Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+              },
+            ),
+          ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -140,6 +152,17 @@ class GameSelect extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Game Select'),
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
+        actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.logout), 
+              onPressed: () {
+                Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+              },
+            ),
+          ],
       ),
       body: Center(
           child: Column(
