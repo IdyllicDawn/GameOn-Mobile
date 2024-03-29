@@ -31,19 +31,16 @@ class _LoginPageState extends State<LoginPage> {
 
     FocusScope.of(context).unfocus();
 
-    print("hello");
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final id = data['id'];
       // final firstName = data['firstName']; data not used yet
       // final lastName = data['lastName']; data not used yet
-      print(id);
 
       if (id != -1) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         setState(() {

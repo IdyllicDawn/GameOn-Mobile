@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'login_page.dart';
-import 'bottombar.dart';
 
 void main() {
   runApp(const GameOn());

@@ -26,7 +26,7 @@ class SignupPageState extends State<SignupPage> {
     final username = _usernameController.text;
     final password = _passwordController.text;
 
-    final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/');
+    final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/signup');
     final response = await http.post(
       url,
       body: jsonEncode({
@@ -46,7 +46,7 @@ class SignupPageState extends State<SignupPage> {
       if (error.isEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         showDialog(

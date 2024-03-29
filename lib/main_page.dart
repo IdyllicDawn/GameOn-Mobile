@@ -13,11 +13,11 @@ class HomePage extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
         actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.logout), 
+              icon: const Icon(Icons.logout), 
               onPressed: () {
                 Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
               },
             ),
@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
@@ -125,6 +125,8 @@ class LeaderboardEntry {
   });
 }
 class TypingButton extends StatelessWidget {
+  const TypingButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -132,7 +134,7 @@ class TypingButton extends StatelessWidget {
         // Add your button's onPressed logic here
         Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SecondPage()),
+              MaterialPageRoute(builder: (context) => const SecondPage()),
             );
       },
       child: Ink.image(image: 
@@ -154,11 +156,11 @@ class GameSelect extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
         actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.logout), 
+              icon: const Icon(Icons.logout), 
               onPressed: () {
                 Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
               },
             ),
@@ -174,21 +176,23 @@ class GameSelect extends StatelessWidget {
               'Select a Game',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            TypingButton(),
+            const TypingButton(),
           ])),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
 
 class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Type Racer'),
+        title: const Text('Type Racer'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Welcome!'),
       ),
     );
