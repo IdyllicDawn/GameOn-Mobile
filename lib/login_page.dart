@@ -57,6 +57,13 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _guestLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: null)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -160,6 +167,25 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Create Account.",
                       style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _guestLogin,
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 25),
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      child: const Text('Continue as a guest'),
                     ),
                   ),
                 ],

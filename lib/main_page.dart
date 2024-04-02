@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'typeracer_game.dart'; // Import the TyperacerGame file
 
 class HomePage extends StatelessWidget {
-  final String loggedInUsername;
+  final String? loggedInUsername;
 
   HomePage({super.key, required this.loggedInUsername});
 
@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
 }
 
 class Leaderboard extends StatelessWidget {
-  final String loggedInUsername;
+  final String? loggedInUsername;
 
   const Leaderboard({super.key, required this.loggedInUsername});
 
@@ -127,10 +127,8 @@ class Leaderboard extends StatelessWidget {
   }
 }
 
-Future<List<LeaderboardEntry>> fetchLeaderboardData(
-    String loggedInUsername) async {
-  final response = await http.post(Uri.parse(
-      'https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
+Future<List<LeaderboardEntry>> fetchLeaderboardData(String loggedInUsername) async {
+  final response = await http.post(Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
 
   print(response.body);
 
@@ -168,7 +166,7 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
     leaderboardEntries.addAll(results.map((result) {
       // Check if the rank we remove is lower than the rank of the logged in user to prevent duplicate ranks
       int rank = results.indexOf(result) + 1;
-      if (loggedInUserEntry!.rank <= results.indexOf(result) + 1) {
+      if (loggedInUserEntry != null && loggedInUserEntry!.rank <= results.indexOf(result) + 1) {
         rank = results.indexOf(result) + 2;
       }
       final name = result['Username'] ?? '';
@@ -255,7 +253,7 @@ class TypingButton extends StatelessWidget {
 }
 
 class GameSelect extends StatelessWidget {
-  final String loggedInUsername;
+  final String? loggedInUsername;
 
   const GameSelect({super.key, required this.loggedInUsername});
 
