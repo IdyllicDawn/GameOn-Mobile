@@ -46,7 +46,7 @@ class SignupPageState extends State<SignupPage> {
       if (error.isEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: username)),
         );
       } else {
         showDialog(

@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
-    
+
     final url =
         Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/users');
     final response = await http.post(
@@ -40,7 +40,8 @@ class _LoginPageState extends State<LoginPage> {
       if (id != -1) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+              builder: (context) => HomePage(loggedInUsername: username)),
         );
       } else {
         setState(() {
@@ -152,7 +153,8 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignupPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const SignupPage()),
                       );
                     },
                     child: const Text(

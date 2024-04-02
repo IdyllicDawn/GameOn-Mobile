@@ -4,7 +4,8 @@ import 'main_page.dart';
 int _currentIndex = 0;
 
 class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+  final String loggedInUsername;
+  const BottomBar({super.key, required this.loggedInUsername});
 
   @override
   BottomBarState createState() => BottomBarState();
@@ -22,12 +23,12 @@ class BottomBarState extends State<BottomBar> {
         if (_currentIndex == 0) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const GameSelect()),
+            MaterialPageRoute(builder: (context) => GameSelect(loggedInUsername: widget.loggedInUsername)),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: widget.loggedInUsername)),
           );
         }
       },
