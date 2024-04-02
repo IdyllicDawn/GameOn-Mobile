@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'typeracer_game.dart'; // Import the TyperacerGame file
 
 class HomePage extends StatelessWidget {
   final String loggedInUsername;
 
- HomePage({super.key, required this.loggedInUsername});
+  HomePage({super.key, required this.loggedInUsername});
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +127,10 @@ class Leaderboard extends StatelessWidget {
   }
 }
 
-Future<List<LeaderboardEntry>> fetchLeaderboardData(String loggedInUsername) async {
-  final response = await http.post(Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
+Future<List<LeaderboardEntry>> fetchLeaderboardData(
+    String loggedInUsername) async {
+  final response = await http.post(Uri.parse(
+      'https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
 
   print(response.body);
 
@@ -186,7 +189,6 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(String loggedInUsername) asy
   }
 }
 
-
 class LeaderboardEntry {
   final int rank;
   final String name;
@@ -200,6 +202,33 @@ class LeaderboardEntry {
     required this.score,
   });
 }
+
+class TyperacerGame extends StatelessWidget {
+  const TyperacerGame({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Typeracer Game"),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            child: Text("Start Typing Test"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TypingTestScreen()),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class TypingButton extends StatelessWidget {
   const TypingButton({super.key});
 
@@ -207,25 +236,29 @@ class TypingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Add your button's onPressed logic here
         Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondPage()),
-            );
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const TyperacerGame()), // Navigate to the TyperacerGame page
+        );
       },
-      child: Ink.image(image: 
-      const NetworkImage('https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
-      height: 200,
-      width: 200,
-      fit: BoxFit.cover
+      child: Ink.image(
+        image: const NetworkImage(
+            'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
+        height: 200,
+        width: 200,
+        fit: BoxFit.cover,
       ),
-      );
+    );
   }
 }
+
 class GameSelect extends StatelessWidget {
   final String loggedInUsername;
 
   const GameSelect({super.key, required this.loggedInUsername});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,16 +266,16 @@ class GameSelect extends StatelessWidget {
         title: const Text('Game Select'),
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
         actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.logout), 
-              onPressed: () {
-                Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
-              },
-            ),
-          ],
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
           child: Column(
