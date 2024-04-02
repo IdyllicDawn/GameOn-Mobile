@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'main_page.dart';
-import 'login_page.dart'; 
+import 'login_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -15,24 +15,67 @@ class SignupPage extends StatefulWidget {
 }
 
 class SignupPageState extends State<SignupPage> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  String? _error;
+  bool _hasError = false;
+  bool _usernameError = false;
+  bool _emailError = false;
+  bool _passwordError = false;
+  bool _confirmPasswordError = false;
 
   Future<void> _signup() async {
-    final firstName = _firstNameController.text;
-    final lastName = _lastNameController.text;
+    final email = _emailController.text;
     final username = _usernameController.text;
     final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
 
-    final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/signup');
+    if (username.isEmpty) {
+      setState(() {
+        _hasError = true;
+        _usernameError = true;
+      });
+    }
+    if (email.isEmpty) {
+      setState(() {
+        _hasError = true;
+        _emailError = true;
+      });
+    }
+    if (password.isEmpty) {
+      setState(() {
+        _hasError = true;
+        _passwordError = true;
+      });
+    }
+    if (confirmPassword.isEmpty) {
+      setState(() {
+        _hasError = true;
+        _confirmPasswordError = true;
+      });
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        _error = 'Passwords do not match.';
+        _hasError = true;
+        _passwordError = true;
+        _confirmPasswordError = true;
+      });
+    }
+
+    if (_hasError) return;
+
+    final url =
+        Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/signup');
     final response = await http.post(
       url,
       body: jsonEncode({
-        'firstName': firstName,
-        'lastName': lastName,
         'username': username,
+        'email': email,
         'password': password,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -46,45 +89,20 @@ class SignupPageState extends State<SignupPage> {
       if (error.isEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: username)),
+          MaterialPageRoute(
+              builder: (context) => HomePage(loggedInUsername: username)),
         );
       } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: Text(error),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        setState(() {
+          _error = error;
+          _hasError = true;
+        });
       }
     } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred. Please try again later.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      setState(() {
+        _error = 'An error occurred. Please try again later.';
+        _hasError = true;
+      });
     }
   }
 
@@ -118,37 +136,107 @@ class SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: _firstNameController,
-                decoration: const InputDecoration(
-                  labelText: 'First Name',
-                  border: OutlineInputBorder(),
+              if (_error != null)
+                Text(
+                  _error!,
+                  style: const TextStyle(color: Colors.red),
                 ),
-              ),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Last Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
               const SizedBox(height: 20.0),
               TextField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
+                onChanged: (_) {
+                  setState(() {
+                    _usernameError = false;
+                    _hasError = false;
+                  });
+                },
+                decoration: InputDecoration(
                   labelText: 'Username',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _usernameError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _usernameError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  errorText: _usernameError ? 'This field is required' : null,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: _emailController,
+                onChanged: (_) {
+                  setState(() {
+                    _emailError = false;
+                    _hasError = false;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _emailError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _emailError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  errorText: _emailError ? 'This field is required' : null,
                 ),
               ),
               const SizedBox(height: 20.0),
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                onChanged: (_) {
+                  setState(() {
+                    _passwordError = false;
+                    _hasError = false;
+                  });
+                },
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _passwordError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _passwordError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  errorText: _passwordError ? 'This field is required' : null,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: _confirmPasswordController,
+                onChanged: (_) {
+                  setState(() {
+                    _confirmPasswordError = false;
+                    _hasError = false;
+                  });
+                },
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _confirmPasswordError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _confirmPasswordError ? Colors.red : Colors.black,
+                    ),
+                  ),
+                  errorText:
+                      _confirmPasswordError ? 'This field is required' : null,
                 ),
               ),
               const SizedBox(height: 20.0),

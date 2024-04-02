@@ -4,7 +4,7 @@ import 'main_page.dart';
 int _currentIndex = 0;
 
 class BottomBar extends StatefulWidget {
-  final String loggedInUsername;
+  final String? loggedInUsername;
   const BottomBar({super.key, required this.loggedInUsername});
 
   @override
