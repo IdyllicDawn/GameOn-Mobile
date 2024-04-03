@@ -4,6 +4,7 @@ import 'bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'typeracer_game.dart'; // Import the TyperacerGame file
 
 class HomePage extends StatelessWidget {
   final String? loggedInUsername;
@@ -204,6 +205,33 @@ class LeaderboardEntry {
   });
 }
 
+class TyperacerGame extends StatelessWidget {
+  const TyperacerGame({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Typeracer Game"),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            child: Text("Start Typing Test"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TypingTestScreen()),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class TypingButton extends StatelessWidget {
   const TypingButton({super.key});
 
@@ -211,18 +239,20 @@ class TypingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Add your button's onPressed logic here
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SecondPage()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  const TyperacerGame()), // Navigate to the TyperacerGame page
         );
       },
       child: Ink.image(
-          image: const NetworkImage(
-              'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
-          height: 200,
-          width: 200,
-          fit: BoxFit.cover),
+        image: const NetworkImage(
+            'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
+        height: 200,
+        width: 200,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
