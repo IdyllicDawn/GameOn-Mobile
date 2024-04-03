@@ -206,18 +206,18 @@ class LeaderboardEntry {
 }
 
 class TyperacerGame extends StatelessWidget {
-  const TyperacerGame({Key? key}) : super(key: key);
+  const TyperacerGame({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Typeracer Game"),
+          title: const Text("Typeracer Game"),
         ),
         body: Center(
           child: ElevatedButton(
-            child: Text("Start Typing Test"),
+            child: const Text("Start Typing Test"),
             onPressed: () {
               Navigator.push(
                 context,
@@ -232,30 +232,7 @@ class TyperacerGame extends StatelessWidget {
 }
 
 
-class TypingButton extends StatelessWidget {
-  const TypingButton({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  const TyperacerGame()), // Navigate to the TyperacerGame page
-        );
-      },
-      child: Ink.image(
-        image: const NetworkImage(
-            'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
-        height: 200,
-        width: 200,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-}
 
 class GameSelect extends StatelessWidget {
   final String? loggedInUsername;
@@ -317,7 +294,7 @@ class GameSelect extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SecondPage()),
+                                builder: (context) => const TyperacerGame()),
                           );
                         }
                       },
@@ -384,22 +361,6 @@ class GameSelect extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomBar(loggedInUsername: loggedInUsername),
-    );
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Type Racer'),
-      ),
-      body: const Center(
-        child: Text('Welcome!'),
-      ),
     );
   }
 }
