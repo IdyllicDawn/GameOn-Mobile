@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatelessWidget {
   final String? loggedInUsername;
 
- HomePage({super.key, required this.loggedInUsername});
+  HomePage({super.key, required this.loggedInUsername});
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +127,10 @@ class Leaderboard extends StatelessWidget {
   }
 }
 
-Future<List<LeaderboardEntry>> fetchLeaderboardData(String? loggedInUsername) async {
-  final response = await http.post(Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
+Future<List<LeaderboardEntry>> fetchLeaderboardData(
+    String? loggedInUsername) async {
+  final response = await http.post(Uri.parse(
+      'https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
 
   print(response.body);
 
@@ -165,7 +168,8 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(String? loggedInUsername) as
     leaderboardEntries.addAll(results.map((result) {
       // Check if the rank we remove is lower than the rank of the logged in user to prevent duplicate ranks
       int rank = results.indexOf(result) + 1;
-      if (loggedInUserEntry != null && loggedInUserEntry!.rank <= results.indexOf(result) + 1) {
+      if (loggedInUserEntry != null &&
+          loggedInUserEntry.rank <= results.indexOf(result) + 1) {
         rank = results.indexOf(result) + 2;
       }
       final name = result['Username'] ?? '';
@@ -186,7 +190,6 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(String? loggedInUsername) as
   }
 }
 
-
 class LeaderboardEntry {
   final int rank;
   final String name;
@@ -200,6 +203,7 @@ class LeaderboardEntry {
     required this.score,
   });
 }
+
 class TypingButton extends StatelessWidget {
   const TypingButton({super.key});
 
@@ -209,23 +213,25 @@ class TypingButton extends StatelessWidget {
       onPressed: () {
         // Add your button's onPressed logic here
         Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondPage()),
-            );
+          context,
+          MaterialPageRoute(builder: (context) => const SecondPage()),
+        );
       },
-      child: Ink.image(image: 
-      const NetworkImage('https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
-      height: 200,
-      width: 200,
-      fit: BoxFit.cover
-      ),
-      );
+      child: Ink.image(
+          image: const NetworkImage(
+              'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
+          height: 200,
+          width: 200,
+          fit: BoxFit.cover),
+    );
   }
 }
+
 class GameSelect extends StatelessWidget {
   final String? loggedInUsername;
 
   const GameSelect({super.key, required this.loggedInUsername});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,29 +239,120 @@ class GameSelect extends StatelessWidget {
         title: const Text('Game Select'),
         backgroundColor: const Color.fromARGB(255, 87, 179, 255),
         actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.logout), 
-              onPressed: () {
-                Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
-              },
-            ),
-          ],
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
             const SizedBox(height: 20),
             Text(
               'Select a Game',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const TypingButton(),
-          ])),
+            const SizedBox(height: 20),
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 400,
+                enableInfiniteScroll: true,
+                autoPlay: true,
+                enlargeCenterPage: true,
+              ),
+              items: [
+                'images/ReactionSpeedIcon.png',
+                'images/TestLogo.png',
+              ].map((String imageUrl) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    String gameName = '';
+                    if (imageUrl == 'images/ReactionSpeedIcon.png') {
+                      gameName = 'Reaction Speed Test';
+                    } else if (imageUrl == 'images/TestLogo.png') {
+                      gameName = 'Typing Speed Test';
+                    }
+
+                    return GestureDetector(
+                      onTap: () {
+                        if (imageUrl == 'images/TestLogo.png') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SecondPage()),
+                          );
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Center(
+                                child: Image.asset(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(125, 0, 0, 0),
+                                      Color.fromARGB(0, 0, 0, 0)
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                  horizontal: 20.0,
+                                ),
+                                child: Text(
+                                  gameName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomBar(loggedInUsername: loggedInUsername),
     );
   }
