@@ -127,7 +127,7 @@ class Leaderboard extends StatelessWidget {
   }
 }
 
-Future<List<LeaderboardEntry>> fetchLeaderboardData(String loggedInUsername) async {
+Future<List<LeaderboardEntry>> fetchLeaderboardData(String? loggedInUsername) async {
   final response = await http.post(Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
 
   print(response.body);
