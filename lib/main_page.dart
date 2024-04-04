@@ -278,6 +278,7 @@ class GameSelect extends StatelessWidget {
               items: [
                 'images/ReactionSpeedIcon.png',
                 'images/TestLogo.png',
+                'images/AimIcon.png',
               ].map((String imageUrl) {
                 return Builder(
                   builder: (BuildContext context) {
@@ -286,6 +287,8 @@ class GameSelect extends StatelessWidget {
                       gameName = 'Reaction Speed Test';
                     } else if (imageUrl == 'images/TestLogo.png') {
                       gameName = 'Typing Speed Test';
+                    } else if (imageUrl == 'images/AimIcon.png') {
+                      gameName = 'Aim Trainer';
                     }
 
                     return GestureDetector(
