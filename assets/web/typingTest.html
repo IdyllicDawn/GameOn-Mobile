@@ -35,14 +35,14 @@
     <div class="center y axis">
         <div style="position: absolute;top: 20%; left: 50%;">
             <div id="displayText"></div>
+            <input type="text" id="hiddenInput" style="opacity: 0; position: absolute; z-index: -1;">
         </div>
+    </div>
 
     <script>
         let currentIndex = 0;
         const displayText = document.getElementById('displayText');
         const textContent = 'The quick brown fox jumps over the lazy dog';
-
-        displayText.innerHTML = [...textContent].map((char, index) => `<span class="char" id="char${index}">${char}</span>`).join('');
 
         function measureCharWidth(char, fontFamily, fontSize) {
             // Create a span element
@@ -68,11 +68,17 @@
             const currentCharElement = document.getElementById(`char${currentIndex}`);
             if (currentCharElement) {
                 currentCharElement.classList.add('current');
-                const offset = currentIndex*-measureCharWidth('a', 'monospace', '24px')
+                const offset = currentIndex*-measureCharWidth('a', 'monospace', '24px');
                 displayText.style.transform = `translateX(${offset}px)`;
             }
         }
-        
+
+        function focusHiddenInput() {
+            document.getElementById('hiddenInput').focus();
+        }
+
+        displayText.innerHTML = [...textContent].map((char, index) => `<span class="char" id="char${index}">${char}</span>`).join('');
+        focusHiddenInput();
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Backspace' && currentIndex > 0) {
@@ -96,7 +102,7 @@
 
             centerCurrentCharacter();
             event.preventDefault(); // Prevent default to keep focus and avoid scrolling or other side effects.
-            displayText.focus(); // Trigger onscreen keyboard
+            focusHiddenInput(); // Trigger onscreen keyboard
         });
 
         window.addEventListener('resize', centerCurrentCharacter); // Re-center on window resize

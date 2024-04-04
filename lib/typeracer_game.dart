@@ -9,18 +9,24 @@ class TypingTestScreen extends StatefulWidget {
 }
 
 class _TypingTestScreenState extends State<TypingTestScreen> {
-  final bool autofocus = true;
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..loadFlutterAsset('assets/web/typingTest.html')
-    ..runJavaScript('document.getElementById("input").focus();');
+    ..enableZoom(false)
+    ..setBackgroundColor(const Color(0x00000000))
+    ..loadFlutterAsset('assets/web/typingTest.html');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('TypeRacer'),
       ),
-      body: WebViewWidget(controller: controller),
+      body: GestureDetector(
+        onTap: () {
+          controller.runJavaScript('focusHiddenInput();');
+        },
+        child: WebViewWidget(controller: controller),
+      ),
     );
   }
 }
