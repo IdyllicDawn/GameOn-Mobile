@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Character Color Change On Keypress</title>
+    <style>
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .current {
+            background-color: teal;
+            padding: 2px; /* Add padding to ensure the background covers a bit more space around the character */
+            border: 2px solid black; /* Optional: if you want a border around the current character */
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #displayText {
+            font-family: monospace;
+            font-size: 24px; /* Adjust based on your preference */
+            position: relative; /* Keep it relative for simplicity */
+            white-space: nowrap; /* Prevent wrapping */
+            transition: transform 0.1s ease-out; /* Smooth transition for re-centering */
+        }
+    </style>
+</head>
+<body>
+    <div class="center y axis">
+        <div style="position: absolute;top: 20%; left: 50%;">
+            <div id="displayText"></div>
+        </div>
+
+    <script>
+        let currentIndex = 0;
+        const displayText = document.getElementById('displayText');
+        const textContent = 'The quick brown fox jumps over the lazy dog';
+
+        displayText.innerHTML = [...textContent].map((char, index) => `<span class="char" id="char${index}">${char}</span>`).join('');
+
+        function measureCharWidth(char, fontFamily, fontSize) {
+            // Create a span element
+            var span = document.createElement('span');
+            span.style.visibility = 'hidden'; // so it doesn't disturb the layout
+            span.style.fontFamily = fontFamily;
+            span.style.fontSize = fontSize;
+            span.textContent = char;
+
+            // Append it to the body to make it part of the document
+            document.body.appendChild(span);
+
+            // Measure the width
+            var width = span.getBoundingClientRect().width;
+
+            // Remove the span from the document
+            document.body.removeChild(span);
+
+            return width;
+        }
+
+        function centerCurrentCharacter() {
+            const currentCharElement = document.getElementById(`char${currentIndex}`);
+            if (currentCharElement) {
+                currentCharElement.classList.add('current');
+                const offset = currentIndex*-measureCharWidth('a', 'monospace', '24px')
+                displayText.style.transform = `translateX(${offset}px)`;
+            }
+        }
+        
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Backspace' && currentIndex > 0) {
+                displayText.children[currentIndex].classList.remove('correct', 'incorrect', 'current');
+                currentIndex--;
+                displayText.children[currentIndex].classList.remove('correct', 'incorrect', 'current');
+            } else if (event.key !== 'Shift' && event.key !== 'CapsLock') {
+                const currentChar = textContent.charAt(currentIndex);
+                if (event.key === currentChar) {
+                    displayText.children[currentIndex].classList.add('correct');
+                    displayText.children[currentIndex].classList.remove('incorrect', 'current');
+                } else {
+                    displayText.children[currentIndex].classList.add('incorrect');
+                    displayText.children[currentIndex].classList.remove('correct', 'current');
+                }
+
+                if (currentIndex < textContent.length - 1) {
+                    currentIndex++;
+                }
+            }
+
+            centerCurrentCharacter();
+            event.preventDefault(); // Prevent default to keep focus and avoid scrolling or other side effects.
+            displayText.focus(); // Trigger onscreen keyboard
+        });
+
+        window.addEventListener('resize', centerCurrentCharacter); // Re-center on window resize
+
+        // Initial centering
+        centerCurrentCharacter();
+    </script>
+</body>
+</html>

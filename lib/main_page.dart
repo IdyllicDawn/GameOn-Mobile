@@ -8,7 +8,7 @@ import 'typeracer_game.dart'; // Import the TyperacerGame file
 class HomePage extends StatelessWidget {
   final String? loggedInUsername;
 
-  HomePage({super.key, required this.loggedInUsername});
+  const HomePage({super.key, required this.loggedInUsername});
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(String? loggedInUsername) as
     leaderboardEntries.addAll(results.map((result) {
       // Check if the rank we remove is lower than the rank of the logged in user to prevent duplicate ranks
       int rank = results.indexOf(result) + 1;
-      if (loggedInUserEntry != null && loggedInUserEntry!.rank <= results.indexOf(result) + 1) {
+      if (loggedInUserEntry != null && loggedInUserEntry.rank <= results.indexOf(result) + 1) {
         rank = results.indexOf(result) + 2;
       }
       final name = result['Username'] ?? '';
@@ -202,22 +202,22 @@ class LeaderboardEntry {
 }
 
 class TyperacerGame extends StatelessWidget {
-  const TyperacerGame({Key? key}) : super(key: key);
+  const TyperacerGame({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Typeracer Game"),
+          title: const Text("Typeracer Game"),
         ),
         body: Center(
           child: ElevatedButton(
-            child: Text("Start Typing Test"),
+            child: const Text("Start Typing Test"),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TypingTestScreen()),
+                MaterialPageRoute(builder: (context) => const TypingTestScreen()),
               );
             },
           ),
