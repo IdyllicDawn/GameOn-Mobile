@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'typeracer_game.dart'; // Import the TyperacerGame file
+import 'package:GameOn/reaction_game.dart';
+import 'package:GameOn/accuracy_game.dart';
 
 class HomePage extends StatelessWidget {
   final String? loggedInUsername;
@@ -293,11 +295,28 @@ class GameSelect extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        if (imageUrl == 'images/TestLogo.png') {
+                        if (imageUrl == 'images/TestLogo.png') 
+                        {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const TyperacerGame()),
+                          );
+                        }
+                        else if (imageUrl == 'images/ReactionSpeedIcon.png')
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReactionGame()),
+                          );
+                        }
+                        else if (imageUrl == 'images/AimIcon.png')
+                        {
+                           Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AccuracyGame()),
                           );
                         }
                       },
