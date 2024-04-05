@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TypingTestScreen extends StatefulWidget {
+  const TypingTestScreen({super.key});
+
   @override
-  _TypingTestScreenState createState() => _TypingTestScreenState();
+  TypingTestScreenState createState() => TypingTestScreenState();
 }
 
-class _TypingTestScreenState extends State<TypingTestScreen> {
+class TypingTestScreenState extends State<TypingTestScreen> {
   final String textToType = "The quick brown fox jumps over the lazy dog.";
   String typedText = "";
   final TextEditingController _textController = TextEditingController();
@@ -16,7 +18,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   void initState() {
     super.initState();
     _focusNode.requestFocus();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToCurrentLetter();
     });
   }
@@ -31,7 +33,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         typedText = typedText.substring(0, typedText.length - 1);
       }
     });
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToCurrentLetter();
     });
   }
@@ -47,7 +49,6 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 
     double currentLetterOffset = 0;
     for (int i = 0; i < currentLetterIndex; i++) {
-      final characterSpan = TextSpan(text: textToType[i]);
       final characterWidth = textPainter.width;
       currentLetterOffset += characterWidth;
     }
@@ -66,14 +67,14 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
           textSpans.add(
             TextSpan(
               text: text[i],
-              style: TextStyle(color: Colors.green),
+              style: const TextStyle(color: Colors.green),
             ),
           );
         } else {
           textSpans.add(
             TextSpan(
               text: text[i],
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
           );
         }
@@ -81,7 +82,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         textSpans.add(
           TextSpan(
             text: text[i],
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               backgroundColor: Colors.yellow,
             ),
@@ -91,7 +92,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         textSpans.add(
           TextSpan(
             text: text[i],
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         );
       }
@@ -103,7 +104,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Typing Test"),
+        title: const Text("Typing Test"),
       ),
       body: Column(
         children: [
@@ -134,6 +135,8 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -146,7 +149,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: TypingTestScreen(),
+      home: const TypingTestScreen(),
     );
   }
 }
@@ -165,5 +168,5 @@ class NoAnimationTransitionBuilder extends PageTransitionsBuilder {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
