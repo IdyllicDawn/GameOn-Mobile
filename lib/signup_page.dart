@@ -26,6 +26,12 @@ class SignupPageState extends State<SignupPage> {
   bool _emailError = false;
   bool _passwordError = false;
   bool _confirmPasswordError = false;
+  String? usernameErrorMessage = '';
+  String emailErrorMessage = '';
+  String passwordErrorMessage = '';
+  String confirmPasswordErrorMessage = '';
+  RegExp usernameRegex = RegExp(r'^[a-zA-Z0-9_]+$');
+  RegExp emailRegex = RegExp(r'\S+@\S+.(com|net|org)$');
 
   Future<void> _signup() async {
     final email = _emailController.text;
@@ -37,24 +43,97 @@ class SignupPageState extends State<SignupPage> {
       setState(() {
         _hasError = true;
         _usernameError = true;
+        usernameErrorMessage = 'This field is required.';
+      });
+    } else if (username.length < 4) {
+      setState(() {
+        _hasError = true;
+        _usernameError = true;
+        usernameErrorMessage = 'Username must be at least 4 characters long.';
+      });
+    } else if (!usernameRegex.hasMatch(username)) {
+      setState(() {
+        _hasError = true;
+        _usernameError = true;
+        usernameErrorMessage =
+            'Username may only contain letters, numbers, or underscores.';
       });
     }
+
     if (email.isEmpty) {
       setState(() {
         _hasError = true;
         _emailError = true;
+        emailErrorMessage = 'This field is required.';
+      });
+    } else if (!emailRegex.hasMatch(email)) {
+      setState(() {
+        _hasError = true;
+        _emailError = true;
+        emailErrorMessage = 'Invalid email address.';
       });
     }
+
     if (password.isEmpty) {
       setState(() {
         _hasError = true;
         _passwordError = true;
+        passwordErrorMessage = 'This field is required.';
       });
+    } else if (password.length < 8) {
+      setState(() {
+        _hasError = true;
+        _passwordError = true;
+        passwordErrorMessage = 'Password must be at least 8 characters long.';
+      });
+    } else {
+      // Handle case of password being less than 8 characters long and then not meeting requirements
+      passwordErrorMessage = '';
+      confirmPasswordErrorMessage = '';
+      if (!RegExp(r'(?=.\d)').hasMatch(password)) {
+        setState(() {
+          _hasError = true;
+          _passwordError = true;
+          passwordErrorMessage +=
+              'Password must contain at least one number.\n';
+        });
+      }
+
+      if (!RegExp(r'[a-z]').hasMatch(password)) {
+        setState(() {
+          _hasError = true;
+          _passwordError = true;
+          passwordErrorMessage +=
+              'Password must contain at least one lowercase letter.\n';
+        });
+      }
+
+      if (!RegExp(r'[A-Z]').hasMatch(password)) {
+        setState(() {
+          _hasError = true;
+          _passwordError = true;
+          passwordErrorMessage +=
+              'Password must contain at least one uppercase letter.\n';
+        });
+      }
+
+      if (!RegExp(r'(?=.[!@#$%^&*()])').hasMatch(password)) {
+        setState(() {
+          _hasError = true;
+          _passwordError = true;
+          passwordErrorMessage +=
+              'Password must contain at least one special character.\n';
+        });
+      }
+
+      passwordErrorMessage = passwordErrorMessage.trimRight(); // trims a new line from the error message
     }
+
     if (confirmPassword.isEmpty) {
       setState(() {
         _hasError = true;
         _confirmPasswordError = true;
+        confirmPasswordErrorMessage = "This field is required.";
       });
     }
 
@@ -162,7 +241,7 @@ class SignupPageState extends State<SignupPage> {
                       color: _usernameError ? Colors.red : Colors.black,
                     ),
                   ),
-                  errorText: _usernameError ? 'This field is required' : null,
+                  errorText: _usernameError ? usernameErrorMessage : null,
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -186,7 +265,7 @@ class SignupPageState extends State<SignupPage> {
                       color: _emailError ? Colors.red : Colors.black,
                     ),
                   ),
-                  errorText: _emailError ? 'This field is required' : null,
+                  errorText: _emailError ? emailErrorMessage : null,
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -210,7 +289,7 @@ class SignupPageState extends State<SignupPage> {
                       color: _passwordError ? Colors.red : Colors.black,
                     ),
                   ),
-                  errorText: _passwordError ? 'This field is required' : null,
+                  errorText: _passwordError ? (passwordErrorMessage.isNotEmpty ? passwordErrorMessage : null) : null,
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -236,7 +315,7 @@ class SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   errorText:
-                      _confirmPasswordError ? 'This field is required' : null,
+                      _confirmPasswordError ? (confirmPasswordErrorMessage.isNotEmpty ? confirmPasswordErrorMessage : null) : null,
                 ),
               ),
               const SizedBox(height: 20.0),
