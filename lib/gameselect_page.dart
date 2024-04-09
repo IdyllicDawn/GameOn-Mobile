@@ -8,7 +8,6 @@ import 'package:flutter/src/painting/gradient.dart' as flutter;
 import 'package:GameOn/reaction_game.dart';
 import 'package:GameOn/accuracy_game.dart';
 
-
 class GameSelect extends StatelessWidget {
   final String? loggedInUsername;
 
@@ -62,15 +61,18 @@ class GameSelect extends StatelessWidget {
                     String gameDescription = '';
                     if (imageUrl == 'images/ReactionSpeedIcon.png') {
                       gameName = 'Reaction Speed Test';
-                      gameDescription = 'A green screen will appear. When it turns red, click the screen as fast as you can!';
+                      gameDescription =
+                          'A green screen will appear. When it turns red, click the screen as fast as you can!';
                       gameScreen = const ReactionGame();
                     } else if (imageUrl == 'images/TestLogo.png') {
                       gameName = 'Typing Speed Test';
-                      gameDescription = 'A random paragraph will appear on the screen. Type the words while trying to be as fast and accurate as possible!';
+                      gameDescription =
+                          'A random paragraph will appear on the screen. Type the words while trying to be as fast and accurate as possible!';
                       gameScreen = const TypingTestScreen();
                     } else if (imageUrl == 'images/AimIcon.png') {
                       gameName = 'Aim Trainer';
-                      gameDescription = 'Shoot the targets that appear quickly while trying to minimize misses!';
+                      gameDescription =
+                          'Shoot the targets that appear quickly while trying to minimize misses!';
                       gameScreen = const AccuracyGame();
                     }
 
@@ -98,8 +100,7 @@ class GameSelect extends StatelessWidget {
                                   onPressed: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            gameScreen),
+                                        builder: (context) => gameScreen),
                                   ),
                                   child: const Text('Play'),
                                 ),

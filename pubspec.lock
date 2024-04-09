@@ -240,6 +240,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.4"
+  rive:
+    dependency: transitive
+    description:
+      name: rive
+      sha256: ec44b6cf7341e21727c4b0e762f4ac82f9a45f7e52df3ebad2d1289a726fbaaf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.1"
+  rive_common:
+    dependency: transitive
+    description:
+      name: rive_common
+      sha256: "0f070bc0e764c570abd8b34d744ef30d1292bd4051f2e0951bbda755875fce6a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -367,3 +399,4 @@ packages:
     version: "3.13.0"
 sdks:
   dart: ">=3.3.0 <4.0.0"
+  flutter: ">=3.16.6"

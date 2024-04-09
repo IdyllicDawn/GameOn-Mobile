@@ -9,7 +9,14 @@ enum LeaderboardType { typing, reaction }
 class HomePage extends StatefulWidget {
   final String? loggedInUsername;
 
-  HomePage({super.key, required this.loggedInUsername});
+  const HomePage({super.key, required this.loggedInUsername});
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  LeaderboardType _selectedLeaderboard = LeaderboardType.typing;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +115,9 @@ class Leaderboard extends StatelessWidget {
                     label: Text('Device'),
                   ),
                   DataColumn(
-                    label: Text(leaderboardType == LeaderboardType.typing ? 'Score' : 'Time'),
+                    label: Text(leaderboardType == LeaderboardType.typing
+                        ? 'Score'
+                        : 'Time'),
                   ),
                 ],
                 rows: leaderboardScores.asMap().entries.map((entry) {
@@ -159,8 +168,10 @@ class Leaderboard extends StatelessWidget {
 Future<List<LeaderboardEntry>> fetchLeaderboardData(
     String? loggedInUsername, LeaderboardType leaderboardType) async {
   final uri = leaderboardType == LeaderboardType.typing
-      ? Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/TypingLeaderboard')
-      : Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
+      ? Uri.parse(
+          'https://group8large-57cfa8808431.herokuapp.com/api/TypingLeaderboard')
+      : Uri.parse(
+          'https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
 
   final response = await http.post(uri);
 
@@ -174,7 +185,9 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
     for (var result in results) {
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing
+          ? result['Score'] ?? 0
+          : result['Time'] ?? 0;
       final rank = results.indexOf(result) + 1;
 
       if (name == loggedInUsername) {
@@ -200,12 +213,15 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
     leaderboardEntries.addAll(results.map((result) {
       // Check if the rank we remove is lower than the rank of the logged in user to prevent duplicate ranks
       int rank = results.indexOf(result) + 1;
-      if (loggedInUserEntry != null && loggedInUserEntry!.rank <= results.indexOf(result) + 1) {
+      if (loggedInUserEntry != null &&
+          loggedInUserEntry.rank <= results.indexOf(result) + 1) {
         rank = results.indexOf(result) + 2;
       }
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing
+          ? result['Score'] ?? 0
+          : result['Time'] ?? 0;
 
       return LeaderboardEntry(
         rank: rank,
@@ -233,111 +249,4 @@ class LeaderboardEntry {
     required this.device,
     required this.score,
   });
-}
-
-class TyperacerGame extends StatelessWidget {
-  const TyperacerGame({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Typeracer Game"),
-        ),
-        body: Center(
-          child: ElevatedButton(
-            child: Text("Start Typing Test"),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TypingTestScreen()),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TypingButton extends StatelessWidget {
-  const TypingButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  const TyperacerGame()), // Navigate to the TyperacerGame page
-        );
-      },
-      child: Ink.image(
-        image: const NetworkImage(
-            'https://w7.pngwing.com/pngs/284/875/png-transparent-racing-flags-typeracer-drapeau-a-damier-flag-miscellaneous-flag-racing-thumbnail.png'),
-        height: 200,
-        width: 200,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-}
-
-class GameSelect extends StatelessWidget {
-  final String? loggedInUsername;
-
-  const GameSelect({super.key, required this.loggedInUsername});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Game Select'),
-        backgroundColor: const Color.fromARGB(255, 87, 179, 255),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-            const SizedBox(height: 20),
-            Text(
-              'Select a Game',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const TypingButton(),
-          ])),
-      bottomNavigationBar: BottomBar(loggedInUsername: loggedInUsername),
-    );
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Type Racer'),
-      ),
-      body: const Center(
-        child: Text('Welcome!'),
-      ),
-    );
-  }
 }
