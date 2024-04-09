@@ -63,7 +63,7 @@ class GameSelect extends StatelessWidget {
                     if (imageUrl == 'images/ReactionSpeedIcon.png') {
                       gameName = 'Reaction Speed Test';
                       gameDescription = 'A green screen will appear. When it turns red, click the screen as fast as you can!';
-                      gameScreen = const ReactionGame();
+                      gameScreen = ReactionGame(loggedInUsername: loggedInUsername);
                     } else if (imageUrl == 'images/TestLogo.png') {
                       gameName = 'Typing Speed Test';
                       gameDescription = 'A random paragraph will appear on the screen. Type the words while trying to be as fast and accurate as possible!';

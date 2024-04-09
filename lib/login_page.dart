@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
   void _guestLogin() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: null)),
+      MaterialPageRoute(builder: (context) => const HomePage(loggedInUsername: null)),
     );
   }
 
