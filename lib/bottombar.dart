@@ -24,12 +24,16 @@ class BottomBarState extends State<BottomBar> {
         if (_currentIndex == 0) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => GameSelect(loggedInUsername: widget.loggedInUsername)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    GameSelect(loggedInUsername: widget.loggedInUsername)),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(loggedInUsername: widget.loggedInUsername)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(loggedInUsername: widget.loggedInUsername)),
           );
         }
       },

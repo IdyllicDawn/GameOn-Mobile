@@ -115,7 +115,9 @@ class Leaderboard extends StatelessWidget {
                     label: Text('Device'),
                   ),
                   DataColumn(
-                    label: Text(leaderboardType == LeaderboardType.typing ? 'Score' : 'Time'),
+                    label: Text(leaderboardType == LeaderboardType.typing
+                        ? 'Score'
+                        : 'Time'),
                   ),
                 ],
                 rows: leaderboardScores.asMap().entries.map((entry) {
@@ -166,8 +168,10 @@ class Leaderboard extends StatelessWidget {
 Future<List<LeaderboardEntry>> fetchLeaderboardData(
     String? loggedInUsername, LeaderboardType leaderboardType) async {
   final uri = leaderboardType == LeaderboardType.typing
-      ? Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/TypingLeaderboard')
-      : Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
+      ? Uri.parse(
+          'https://group8large-57cfa8808431.herokuapp.com/api/TypingLeaderboard')
+      : Uri.parse(
+          'https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
 
   final response = await http.post(uri);
 
@@ -181,7 +185,9 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
     for (var result in results) {
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing
+          ? result['Score'] ?? 0
+          : result['Time'] ?? 0;
       final rank = results.indexOf(result) + 1;
 
       if (name == loggedInUsername) {
@@ -213,7 +219,9 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
       }
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing
+          ? result['Score'] ?? 0
+          : result['Time'] ?? 0;
 
       return LeaderboardEntry(
         rank: rank,
