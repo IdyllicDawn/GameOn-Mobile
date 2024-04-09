@@ -1,9 +1,15 @@
+import 'dart:convert';
+
+import 'package:GameOn/main_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:math';
 
 class ReactionGame extends StatefulWidget {
-  const ReactionGame({Key? key}) : super(key: key);
+  final String? loggedInUsername;
+
+  const ReactionGame({super.key, this.loggedInUsername});
 
   @override
   ReactionGameState createState() => ReactionGameState();
@@ -27,7 +33,7 @@ class ReactionGameState extends State<ReactionGame> {
         onTap: () {
           if (!_isActive && _currentColor == Colors.blue) {
             _startTimer();
-          } else if (_currentColor == Colors.green){
+          } else if (_currentColor == Colors.green) {
             _endTime = DateTime.now();
             int reactionTime = _endTime!.difference(_startTime!).inMilliseconds;
             setState(() {
@@ -36,26 +42,50 @@ class ReactionGameState extends State<ReactionGame> {
               _totalReactionTime += reactionTime;
               _attempts++;
               if (_attempts == 5) {
-                _displayText = 'Finished\nYour reaction time: $reactionTime ms\n\nAverage reaction time: ${_totalReactionTime ~/ 5} ms\nClick to play again';
+                _displayText =
+                    'Finished\nYour reaction time: $reactionTime ms\n\nAverage reaction time: ${_totalReactionTime ~/ 5} ms\nClick to play again';
+                if (widget.loggedInUsername != null) {
+                  sendReactionScore(
+                      widget.loggedInUsername, _totalReactionTime ~/ 5);
+                }
                 _attempts = 0;
                 _totalReactionTime = 0;
               } else {
-                _displayText = 'Attempt ${_attempts}/5:\nYour reaction time: $reactionTime ms\nTap the screen to continue';
+                _displayText =
+                    'Attempt $_attempts/5:\nYour reaction time: $reactionTime ms\nTap the screen to continue';
               }
             });
           } else {
             setState(() {
               _isActive = false;
               _currentColor = Colors.blue;
-              _displayText = 'Too soon!\n Wait for the screen to turn green.\nClick to continue.';
+              _displayText =
+                  'Too soon!\n Wait for the screen to turn green.\nClick to continue.';
             });
           }
         },
         child: Center(
-          child: Text(
-            _displayText,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24.0, color: Colors.white),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _displayText,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 24.0, color: Colors.white),
+              ),
+              if (_displayText.contains('Finished'))
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                              loggedInUsername: widget.loggedInUsername)),
+                    );
+                  },
+                  child: const Text('Go to leaderboard'),
+                ),
+            ],
           ),
         ),
       ),
@@ -83,5 +113,24 @@ class ReactionGameState extends State<ReactionGame> {
         });
       }
     });
+  }
+
+  Future<void> sendReactionScore(String? username, int time) async {
+    final url = Uri.parse(
+        'https://group8large-57cfa8808431.herokuapp.com/api/addReactionData');
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'username': username,
+        'time': time,
+        'date': DateTime.now().toString(),
+        'device': 'Phone'
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      print("Success");
+    }
   }
 }

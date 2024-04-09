@@ -61,6 +61,8 @@ class GameSelect extends StatelessWidget {
                     String gameDescription = '';
                     if (imageUrl == 'images/ReactionSpeedIcon.png') {
                       gameName = 'Reaction Speed Test';
+                      gameDescription = 'A green screen will appear. When it turns red, click the screen as fast as you can!';
+                      gameScreen = ReactionGame(loggedInUsername: loggedInUsername);
                       gameDescription =
                           'A green screen will appear. When it turns red, click the screen as fast as you can!';
                       gameScreen = const ReactionGame();
