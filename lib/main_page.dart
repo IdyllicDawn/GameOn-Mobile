@@ -4,10 +4,19 @@ import 'bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class HomePage extends StatelessWidget {
+enum LeaderboardType { typing, reaction }
+
+class HomePage extends StatefulWidget {
   final String? loggedInUsername;
 
   const HomePage({super.key, required this.loggedInUsername});
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  LeaderboardType _selectedLeaderboard = LeaderboardType.typing;
 
   @override
   Widget build(BuildContext context) {
@@ -32,29 +41,56 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          Text(
-            'Leaderboard',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DropdownButton<LeaderboardType>(
+                value: _selectedLeaderboard,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedLeaderboard = value!;
+                  });
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: LeaderboardType.typing,
+                    child: Text('Typing Leaderboard'),
+                  ),
+                  DropdownMenuItem(
+                    value: LeaderboardType.reaction,
+                    child: Text('Reaction Leaderboard'),
+                  ),
+                ],
+              ),
+            ],
           ),
           Expanded(
-            child: Leaderboard(loggedInUsername: loggedInUsername),
+            child: Leaderboard(
+              loggedInUsername: widget.loggedInUsername,
+              leaderboardType: _selectedLeaderboard,
+            ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(loggedInUsername: loggedInUsername),
+      bottomNavigationBar: BottomBar(loggedInUsername: widget.loggedInUsername),
     );
   }
 }
 
 class Leaderboard extends StatelessWidget {
   final String? loggedInUsername;
+  final LeaderboardType leaderboardType;
 
-  const Leaderboard({super.key, required this.loggedInUsername});
+  const Leaderboard({
+    super.key,
+    required this.loggedInUsername,
+    required this.leaderboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LeaderboardEntry>>(
-      future: fetchLeaderboardData(loggedInUsername),
+      future: fetchLeaderboardData(loggedInUsername, leaderboardType),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final leaderboardScores = snapshot.data!;
@@ -68,18 +104,18 @@ class Leaderboard extends StatelessWidget {
                 headingRowHeight: 60,
                 columnSpacing: 30.0,
                 headingRowColor: MaterialStateProperty.all(Colors.blue),
-                columns: const [
-                  DataColumn(
+                columns: [
+                  const DataColumn(
                     label: Text('Rank'),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: Text('User'),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: Text('Device'),
                   ),
                   DataColumn(
-                    label: Text('Score'),
+                    label: Text(leaderboardType == LeaderboardType.typing ? 'Score' : 'Time'),
                   ),
                 ],
                 rows: leaderboardScores.asMap().entries.map((entry) {
@@ -117,6 +153,7 @@ class Leaderboard extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasError) {
+          print("hello");
           return Text('${snapshot.error}');
         }
 
@@ -127,9 +164,12 @@ class Leaderboard extends StatelessWidget {
 }
 
 Future<List<LeaderboardEntry>> fetchLeaderboardData(
-    String? loggedInUsername) async {
-  final response = await http.post(Uri.parse(
-      'https://group8large-57cfa8808431.herokuapp.com/api/leaderboard'));
+    String? loggedInUsername, LeaderboardType leaderboardType) async {
+  final uri = leaderboardType == LeaderboardType.typing
+      ? Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/TypingLeaderboard')
+      : Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
+
+  final response = await http.post(uri);
 
   print(response.body);
 
@@ -141,7 +181,7 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
     for (var result in results) {
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = result['Score'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
       final rank = results.indexOf(result) + 1;
 
       if (name == loggedInUsername) {
@@ -173,7 +213,7 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
       }
       final name = result['Username'] ?? '';
       final device = result['Device'] ?? '';
-      final score = result['Score'] ?? 0;
+      final score = leaderboardType == LeaderboardType.typing ? result['Score'] ?? 0 : result['Time'] ?? 0;
 
       return LeaderboardEntry(
         rank: rank,
@@ -202,9 +242,3 @@ class LeaderboardEntry {
     required this.score,
   });
 }
-
-
-
-
-
-
