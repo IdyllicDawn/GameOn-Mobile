@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:GameOn/resetpass_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'main_page.dart';
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       body: jsonEncode({'username': username, 'password': password}),
       headers: {'Content-Type': 'application/json'},
     );
-
+    
     FocusScope.of(context).unfocus();
 
     if (response.statusCode == 200) {
@@ -151,7 +152,24 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResetPasswordPage()),
+                      );
+                    },
+                    child: const Text(
+                      "Forgot Password?",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
