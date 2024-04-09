@@ -35,8 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final id = data['id'];
-      // final firstName = data['firstName']; data not used yet
-      // final lastName = data['lastName']; data not used yet
 
       if (id != -1) {
         Navigator.pushReplacement(
@@ -84,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: SizedBox(
                     width: 200,
                     height: 150,
-                    child: Image.asset('images/TestLogo.png'),
+                    child: Image.asset('images/GameOnLogo.png'),
                   ),
                 ),
               ),

@@ -126,7 +126,9 @@ class SignupPageState extends State<SignupPage> {
         });
       }
 
-      passwordErrorMessage = passwordErrorMessage.trimRight(); // trims a new line from the error message
+      setState(() {
+        passwordErrorMessage = passwordErrorMessage.trimRight();
+      }); // trims a new line from the error message
     }
 
     if (confirmPassword.isEmpty) {
@@ -211,7 +213,7 @@ class SignupPageState extends State<SignupPage> {
                   child: SizedBox(
                     width: 200,
                     height: 150,
-                    child: Image.asset('images/TestLogo.png'),
+                    child: Image.asset('images/GameOnLogo.png'),
                   ),
                 ),
               ),
@@ -271,10 +273,62 @@ class SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20.0),
               TextField(
                 controller: _passwordController,
+                obscureText: true,
                 onChanged: (_) {
                   setState(() {
                     _passwordError = false;
                     _hasError = false;
+                  });
+                  passwordErrorMessage = '';
+                  confirmPasswordErrorMessage = '';
+
+                  if (_passwordController.text.length < 8) {
+                    setState(() {
+                      _hasError = true;
+                      _passwordError = true;
+                      passwordErrorMessage =
+                          'Password must be at least 8 characters long.\n';
+                    });
+                  }
+
+                  if (!RegExp(r'(?=.\d)').hasMatch(_passwordController.text)) {
+                    setState(() {
+                      _hasError = true;
+                      _passwordError = true;
+                      passwordErrorMessage +=
+                          'Password must contain at least one number.\n';
+                    });
+                  }
+
+                  if (!RegExp(r'[a-z]').hasMatch(_passwordController.text)) {
+                    setState(() {
+                      _hasError = true;
+                      _passwordError = true;
+                      passwordErrorMessage +=
+                          'Password must contain at least one lowercase letter.\n';
+                    });
+                  }
+
+                  if (!RegExp(r'[A-Z]').hasMatch(_passwordController.text)) {
+                    setState(() {
+                      _hasError = true;
+                      _passwordError = true;
+                      passwordErrorMessage +=
+                          'Password must contain at least one uppercase letter.\n';
+                    });
+                  }
+
+                  if (!RegExp(r'[!@#$%^&*()]')
+                      .hasMatch(_passwordController.text)) {
+                    setState(() {
+                      _hasError = true;
+                      _passwordError = true;
+                      passwordErrorMessage +=
+                          'Password must contain at least one special character.\n';
+                    });
+                  }
+                  setState(() {
+                    passwordErrorMessage = passwordErrorMessage.trimRight();
                   });
                 },
                 decoration: InputDecoration(
@@ -289,7 +343,11 @@ class SignupPageState extends State<SignupPage> {
                       color: _passwordError ? Colors.red : Colors.black,
                     ),
                   ),
-                  errorText: _passwordError ? (passwordErrorMessage.isNotEmpty ? passwordErrorMessage : null) : null,
+                  errorText: _passwordError
+                      ? (passwordErrorMessage.isNotEmpty
+                          ? passwordErrorMessage
+                          : null)
+                      : null,
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -314,8 +372,11 @@ class SignupPageState extends State<SignupPage> {
                       color: _confirmPasswordError ? Colors.red : Colors.black,
                     ),
                   ),
-                  errorText:
-                      _confirmPasswordError ? (confirmPasswordErrorMessage.isNotEmpty ? confirmPasswordErrorMessage : null) : null,
+                  errorText: _confirmPasswordError
+                      ? (confirmPasswordErrorMessage.isNotEmpty
+                          ? confirmPasswordErrorMessage
+                          : null)
+                      : null,
                 ),
               ),
               const SizedBox(height: 20.0),

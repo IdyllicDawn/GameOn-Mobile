@@ -6,7 +6,6 @@ import 'typeracer_game.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:flutter/src/painting/gradient.dart' as flutter;
 import 'package:GameOn/reaction_game.dart';
-import 'package:GameOn/accuracy_game.dart';
 
 class GameSelect extends StatelessWidget {
   final String? loggedInUsername;
@@ -39,7 +38,9 @@ class GameSelect extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'Select a Game',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 20),
             CarouselSlider(
@@ -51,28 +52,29 @@ class GameSelect extends StatelessWidget {
               ),
               items: [
                 'images/ReactionSpeedIcon.png',
-                'images/TestLogo.png',
-                'images/AimIcon.png',
+                'images/TypingGameIcon.png',
               ].map((String imageUrl) {
                 return Builder(
                   builder: (BuildContext context) {
-                    Widget gameScreen = TypingTestScreen(loggedInUsername: loggedInUsername);
+                    Widget gameScreen =
+                        TypingTestScreen(loggedInUsername: loggedInUsername);
                     String gameName = '';
                     String gameDescription = '';
+                    String gamePreviewGifUrl = '';
                     if (imageUrl == 'images/ReactionSpeedIcon.png') {
                       gameName = 'Reaction Speed Test';
-                      gameDescription = 'A green screen will appear. When it turns red, click the screen as fast as you can!';
-                      gameScreen = ReactionGame(loggedInUsername: loggedInUsername);
-                    } else if (imageUrl == 'images/TestLogo.png') {
+                      gameDescription =
+                          'A green screen will appear. When it turns red, click the screen as fast as you can!';
+                      gamePreviewGifUrl = 'images/ReactionGame.gif';
+                      gameScreen =
+                          ReactionGame(loggedInUsername: loggedInUsername);
+                    } else if (imageUrl == 'images/TypingGameIcon.png') {
                       gameName = 'Typing Speed Test';
                       gameDescription =
                           'A random paragraph will appear on the screen. Type the words while trying to be as fast and accurate as possible!';
-                      gameScreen = TypingTestScreen(loggedInUsername: loggedInUsername);
-                    } else if (imageUrl == 'images/AimIcon.png') {
-                      gameName = 'Aim Trainer';
-                      gameDescription =
-                          'Shoot the targets that appear quickly while trying to minimize misses!';
-                      gameScreen = const AccuracyGame();
+                      gamePreviewGifUrl = 'images/TypingGame.gif';
+                      gameScreen =
+                          TypingTestScreen(loggedInUsername: loggedInUsername);
                     }
 
                     return GestureDetector(
@@ -81,7 +83,7 @@ class GameSelect extends StatelessWidget {
                           context: context,
                           builder: (_) {
                             return GiffyDialog.image(
-                              Image.asset(imageUrl,
+                              Image.asset(gamePreviewGifUrl,
                                   fit: BoxFit.cover, height: 200),
                               title:
                                   Text(gameName, textAlign: TextAlign.center),
