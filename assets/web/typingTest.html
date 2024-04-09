@@ -1,47 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Character Color Change On Keypress</title>
-    <style>
-        .correct {
-            color: green;
-        }
-        .incorrect {
-            color: red;
-        }
-        .current {
-            background-color: teal;
-            padding: 2px; /* Add padding to ensure the background covers a bit more space around the character */
-            border: 2px solid black; /* Optional: if you want a border around the current character */
-        }
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        #displayText {
-            font-family: monospace;
-            font-size: 24px; /* Adjust based on your preference */
-            position: relative; /* Keep it relative for simplicity */
-            white-space: nowrap; /* Prevent wrapping */
-            transition: transform 0.1s ease-out; /* Smooth transition for re-centering */
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Typing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
 </head>
 <body>
+<<<<<<< Updated upstream
     <div class="center y axis">
         <div style="position: absolute;top: 20%; left: 50%;">
             <div id="displayText"></div>
         </div>
+=======
+    <div id="root"></div>
+>>>>>>> Stashed changes
 
-    <script>
-        let currentIndex = 0;
-        const displayText = document.getElementById('displayText');
-        const textContent = 'The quick brown fox jumps over the lazy dog';
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 
+<<<<<<< Updated upstream
         displayText.innerHTML = [...textContent].map((char, index) => `<span class="char" id="char${index}">${char}</span>`).join('');
 
         function measureCharWidth(char, fontFamily, fontSize) {
@@ -73,36 +52,281 @@
             }
         }
         
+=======
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Backspace' && currentIndex > 0) {
-                displayText.children[currentIndex].classList.remove('correct', 'incorrect', 'current');
-                currentIndex--;
-                displayText.children[currentIndex].classList.remove('correct', 'incorrect', 'current');
-            } else if (event.key !== 'Shift' && event.key !== 'CapsLock') {
-                const currentChar = textContent.charAt(currentIndex);
-                if (event.key === currentChar) {
-                    displayText.children[currentIndex].classList.add('correct');
-                    displayText.children[currentIndex].classList.remove('incorrect', 'current');
-                } else {
-                    displayText.children[currentIndex].classList.add('incorrect');
-                    displayText.children[currentIndex].classList.remove('correct', 'current');
-                }
-
-                if (currentIndex < textContent.length - 1) {
-                    currentIndex++;
-                }
+        const generateRandomWords = (wordList, wordCount) => {
+            let randomWords = [];
+            for (let i = 0; i < wordCount; i++) {
+                randomWords.push(wordList[Math.floor(Math.random() * wordList.length)]);
             }
+            return randomWords.join(' ');
+        };
 
+        const validateChar = (inputChar, expectedChar) => {
+            return inputChar === expectedChar;
+        };
+
+        function SpeedTyping() {
+            const [userInput, setUserInput] = useState('');
+            const [charIndex, setCharIndex] = useState(0);
+            const [numMistakes, setNumMistakes] = useState(0);
+            const [WPM, setWPM] = useState(0);
+            const [timer, setTimer] = useState(60);
+            const [words, setWords] = useState('');
+            const [validatedInputHistory, setValidatedInputHistory] = useState([]);
+            const [hasStarted, setHasStarted] = useState(false);
+            const textDisplayRef = useRef(null); 
+            const charRefs = useRef(new Array(100).fill(null));
+>>>>>>> Stashed changes
+
+            const wordList = [
+                "the", "be", "to", "of", "and", "a", "saxophone", "that", "have", "I",
+                "it", "for", "care", "on", "with", "bee", "as", "you", "do", "at",
+                "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
+                "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
+                "so", "up", "out", "if", "about", "who", "travel", "which", "go", "me",
+                "when", "skate", "can", "like", "time", "no", "just", "him", "know", "strawberry",
+                "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
+                "than", "then", "now", "look", "sing", "come", "its", "around", "think", "also",
+                "back", "after", "blueberry", "two", "how", "our", "work", "first", "well", "way",
+                "even", "new", "meadow", "because", "any", "these", "give", "day", "most", "us",
+                "apple", "banana", "cherry", "pineapple", "elderberry", "fig", "grape", "honeydew",
+                "boat", "tree", "house", "love", "animal", "sun", "moon", "star", "book", "phone",
+                "computer", "music", "movie", "water", "food", "friend", "family", "child", "life", "world",
+                "school", "state", "city", "country", "earth", "solution", "information", "history", "yoga", "relax",
+                "river", "winter", "student", "teacher", "mother", "father", "sister", "brother", "daughter", "son",
+                "summer", "spring", "fall", "leaves", "trampoline", "park", "ocean", "cat", "dog", "bird",
+                "art", "music", "notes", "guitar", "cello", "crayons", "pencil", "blanket", "flower", "paradise",
+                "rocket", "space", "planet", "jupiter", "saturn", "mars", "pluto", "neptune", "galaxy", "light",
+            ];
+            useEffect(() => {
+                const handleClickAnywhere = () => {
+                    inputRef.current.focus();
+                };
+
+                // Add event listener to the whole document
+                document.addEventListener('click', handleClickAnywhere);
+
+                // Cleanup function to remove the event listener
+                return () => {
+                    document.removeEventListener('click', handleClickAnywhere);
+                };
+            }, []); 
+            useEffect(() => {
+                setWords(generateRandomWords(wordList, 100));
+                
+            }, []);
+
+            useEffect(() => {
+                if (hasStarted && timer > 0) {
+                    const intervalId = setInterval(() => {
+                        setTimer((prevTimer) => prevTimer - 1);
+                    }, 1000);
+                    return () => clearInterval(intervalId);
+                }
+            }, [hasStarted, timer]);
+
+            useEffect(() => {
+                if (timer === 0) {
+                    const correctChars = validatedInputHistory.filter(input => input.isCorrect).length;
+                    setWPM(correctChars / 5);
+                }
+            }, [timer, validatedInputHistory]);
+
+            // make any key press trigger the input area
+            useEffect(() => {
+                const handleKeyPress = (event) => {
+                    if (event.key === ' ') {
+                        event.preventDefault();
+                    }
+                    document.getElementById('user-input').focus();
+                };
+                document.addEventListener('keypress', handleKeyPress);
+                return () => document.removeEventListener('keypress', handleKeyPress);
+            }, []);
+
+            const handleUserInput = (event) => {
+                let inputValue = event.target.value;
+                if (!hasStarted) {
+                    setHasStarted(true);
+                }
+
+                const expectedChar = words.charAt(charIndex);
+                const isCharValid = validateChar(inputValue, expectedChar);
+
+                if (textDisplayRef.current) {
+                    const additionalWidth = calculateCharWidth(expectedChar);
+                    const currentTransform = textDisplayRef.current.style.transform;
+                    const currentScrollAmount = currentTransform ? parseFloat(currentTransform.replace('translateX(-', '').replace('px)', '')) : 0;
+                    const newScrollAmount = currentScrollAmount + additionalWidth;
+                    textDisplayRef.current.style.transform = `translateX(-${newScrollAmount}px)`;
+                }
+
+<<<<<<< Updated upstream
             centerCurrentCharacter();
             event.preventDefault(); // Prevent default to keep focus and avoid scrolling or other side effects.
             displayText.focus(); // Trigger onscreen keyboard
         });
+=======
+                setValidatedInputHistory((prevHistory) => [...prevHistory, { char: inputValue, isCorrect: isCharValid }, ]);
+                setCharIndex(prevIndex => prevIndex + 1);
+                setUserInput('');
+>>>>>>> Stashed changes
 
-        window.addEventListener('resize', centerCurrentCharacter); // Re-center on window resize
+                if (!isCharValid) {
+                    setNumMistakes((prevNumMistakes) => prevNumMistakes + 1);
+                }
 
-        // Initial centering
-        centerCurrentCharacter();
+                centerCurrentCharacter(charIndex + 1)
+            };
+
+            const calculateCharWidth = (char) => {
+                const span = document.createElement('span');
+                span.style.visibility = 'hidden'; 
+                span.style.fontFamily = 'monospace';
+                span.style.fontWeight = 'bold';
+                span.style.fontSize = '2.25rem'; 
+                span.textContent = char;
+                document.body.appendChild(span);
+                const width = span.getBoundingClientRect().width;
+                document.body.removeChild(span);
+                return width;
+            };
+
+            const centerCurrentCharacter = (currentIndex) => {
+                if (textDisplayRef.current) {
+                    const span = textDisplayRef.current.children[currentIndex];
+                    const offset = span ? span.offsetLeft - 4 : 0;
+                    textDisplayRef.current.style.transform = `translateX(-${offset}px)`;
+                }
+            };
+
+            const renderedWords = words.split('').map((char, index) => {
+                const historyEntry = validatedInputHistory[index];
+                let charClass = "";
+                if (historyEntry !== undefined) {
+                    charClass = historyEntry.isCorrect ? "text-success" : "text-danger";
+                }
+
+                const style = char === ' ' ? { paddingRight: '0.4em' } : undefined;
+
+                return (<span key={index}
+                            ref={el => charRefs.current[index] = el}
+                            className={charClass}
+                            style={style}
+                        >
+                            {char}
+                        </span>);
+            });
+
+            const radius = 54;
+            const circumference = 2 * Math.PI * radius;
+            const strokeDashoffset = circumference - ((timer / 60) * circumference);
+            const circleContainerStyle = {
+                position: 'relative',
+                width: '120px',
+                height: '120px',
+                margin: '10px auto',
+            };
+
+            const pulseAnimation = `
+                @keyframes pulse {
+                0%, 100% {
+                    transform: translateY(100%)
+                }
+                50% {
+                    transform: translateY(90%)
+                }
+                }
+            `;
+            const startBubblePulse = { animation: 'pulse 2s infinite' };
+            const startBubbleTailStyle = {
+                borderLeft: '10px solid transparent',
+                borderRight: '10px solid transparent',
+                borderBottom: '10px solid'
+            };
+            let startBubbleContainerStyle = "position-absolute top-50 start-30 mt-3 pt-3 ms-4 mb-0 d-flex flex-column align-items-center z-1";
+            let startBubbleStyle = "p-2 text-center fw-bold bg-dark text-light";
+            
+            let cardStyle = "justify-content-center m-3 p-1 pb-3 mb-5 fs-1 h-100 overflow-auto font-monospace";
+            let wordsStyle = "position-relative start-50 pt-4 ms-2 ps-1 overflow-visible border-0 d-flex flex-row align-items-flex-start z-2";
+            let inputAreaStyle = "position-absolute start-50 mt-4 mb-0 fs-1 fw-bold border-0 bg-transparent";
+
+            return (
+                <div className="container-fluid d-flex flex-column align-items-center justify-content-center">
+                    <div id="header" className="row text-center mt-5 pt-5 mb-1">
+                        <h1 id="game-title" className="mb-5 fw-bolder">Speed Typing</h1>
+                        <h5 id="timer-title" className="mb-0 ms-1 fw-bold">Timer</h5>
+
+                        <div className="mt-2 mb-1" style={circleContainerStyle}>
+                            <svg id="both-circles" width="110" height="110" viewBox="0 0 120 120">
+                                <circle id="inner-circle" cx="60" cy="60" r={radius} fill="none" stroke="#eee" strokeWidth="10" />
+                                <circle id="outer-circle"
+                                    cx="60"
+                                    cy="60"
+                                    r={radius}
+                                    fill="none"
+                                    stroke="#007bff"
+                                    strokeWidth="10"
+                                    style={{
+                                        strokeDasharray: circumference,
+                                        strokeDashoffset: strokeDashoffset,
+                                        transition: 'stroke-dashoffset 0.5s linear',
+                                        transform: 'rotate(-90deg)',
+                                        transformOrigin: 'center center',
+                                    }}
+                                />
+                            </svg>
+                            <div className="position-absolute ms-2 pt-4 pb-5" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                                <h1 className="pt-3 mb-0 fw-bold">{timer}</h1>
+                                <h6 className="top-0">seconds</h6>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 className="ms-3 mb-5 text-danger fw-bold">Mistakes: {numMistakes}</h5>
+                        </div>
+                    </div>
+                        
+                    <style>{pulseAnimation}</style>
+                    {!hasStarted && (
+                        <div className={startBubbleContainerStyle} style={startBubblePulse}>
+                            <div style={startBubbleTailStyle}></div>
+                            <div className={startBubbleStyle}>
+                                Type to start!
+                            </div>
+                        </div>
+                    )}
+
+                    <div id="text-container" className={`card ${cardStyle}`} style={{boxShadow: '0 3px 6px rgba(0, 0, 0, 0.3)'}}>
+                        <textarea id="user-input"
+                            className={`form-control ${inputAreaStyle}`}
+                            style={{ width: '2%', resize: 'none', boxShadow: 'none'}}
+                            value={userInput}
+                            onChange={handleUserInput}
+                            autoFocus
+                            rows="1"
+                            disabled={timer === 0}
+                        />
+
+                        <div id="displayed-words"
+                            ref={textDisplayRef}
+                            className={wordsStyle}
+                            style={{ height: '5rem', width: '50rem'}}
+                        >
+                            {renderedWords}
+                        </div>
+                    </div>
+
+                    {timer === 0 &&
+                        <p>Words per minute (WPM): {WPM.toFixed(2)}</p>}
+                </div>
+            )
+        }
+
+        ReactDOM.render(<SpeedTyping />, document.getElementById('root'));
     </script>
 </body>
 </html>

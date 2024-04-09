@@ -20,7 +20,16 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       appBar: AppBar(
         title: const Text('TypeRacer'),
       ),
+<<<<<<< Updated upstream
       body: WebViewWidget(controller: controller),
+=======
+      body: GestureDetector(
+        onTap: () {
+          controller.runJavaScript('SpeedTyping');
+        },
+        child: WebViewWidget(controller: controller),
+      ),
+>>>>>>> Stashed changes
     );
   }
 }
