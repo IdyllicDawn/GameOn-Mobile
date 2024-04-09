@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'dart:async';
 
 class ResetPasswordPage extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   String? _error;
   bool _hasError = false;
+  Color _errorColor = Colors.red;
  TextEditingController controlField = TextEditingController();
 
   Future<void> _checkEmailValidity(String email) async {
@@ -29,14 +30,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         // send the password reset email
         sendEmail(email);
         setState(() {
+          _error = 'Email Sent!';
+          _hasError = true;
+          _errorColor = Colors.green;
+          
+        });
+        Timer(Duration(seconds: 3), () {
+        setState(() {
           _error = '';
-          _hasError = false;
+        });
         });
       } else {
         // email does not exist in the database
         setState(() {
           _error = 'Email does not exist in the database.';
           _hasError = true;
+          _errorColor = Colors.red;
         });
       }
     } else {
@@ -44,12 +53,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       setState(() {
         _error = 'Error checking email validity. Please try again.';
         _hasError = true;
+        _errorColor = Colors.red;
       });
     }
   }
 
   void sendEmail(emailR) async {
-  const message = 'Hello,\t\tPlease click the link below to reset your password:\t';
+  const message = '\nPlease click the link below to reset your password:\n';
   const serviceId = 'service_lp2038n';
   const templateId = 'template_sxd4kie';
   const publicKey = 'eUOYcmbkqPktXlIjF';
@@ -93,7 +103,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               height: 20, 
               child: Text(
                 _error!,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: _errorColor),
               ),
             ),
             
