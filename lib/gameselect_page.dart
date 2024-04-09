@@ -56,7 +56,7 @@ class GameSelect extends StatelessWidget {
               ].map((String imageUrl) {
                 return Builder(
                   builder: (BuildContext context) {
-                    Widget gameScreen = const TypingTestScreen();
+                    Widget gameScreen = TypingTestScreen(loggedInUsername: loggedInUsername);
                     String gameName = '';
                     String gameDescription = '';
                     if (imageUrl == 'images/ReactionSpeedIcon.png') {
@@ -68,7 +68,7 @@ class GameSelect extends StatelessWidget {
                       gameName = 'Typing Speed Test';
                       gameDescription =
                           'A random paragraph will appear on the screen. Type the words while trying to be as fast and accurate as possible!';
-                      gameScreen = const TypingTestScreen();
+                      gameScreen = TypingTestScreen(loggedInUsername: loggedInUsername);
                     } else if (imageUrl == 'images/AimIcon.png') {
                       gameName = 'Aim Trainer';
                       gameDescription =
