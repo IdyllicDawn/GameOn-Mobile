@@ -129,25 +129,55 @@ class Leaderboard extends StatelessWidget {
                   return DataRow(
                     color: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
-                      return states.contains(MaterialState.selected)
-                          ? Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.08)
-                          : backgroundColor;
+                      if (index == 0 &&
+                          loggedInUsername != null &&
+                          leaderboard.name == loggedInUsername) {
+                        return Colors.yellow.withOpacity(0.3);
+                      } else {
+                        return states.contains(MaterialState.selected)
+                            ? Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.08)
+                            : backgroundColor;
+                      }
                     }),
                     cells: [
-                      DataCell(Text(leaderboard.rank.toString())),
+                      DataCell(Text(
+                        leaderboard.rank.toString(),
+                        style: TextStyle(
+                            fontWeight: index == 0 &&
+                                    loggedInUsername != null &&
+                                    leaderboard.name == loggedInUsername
+                                ? FontWeight.bold
+                                : FontWeight.normal),
+                      )),
                       DataCell(Text(
                         leaderboard.name,
                         style: TextStyle(
-                          color: leaderboard.name == 'You'
-                              ? Colors.blue
-                              : Colors.black,
+                          fontWeight: index == 0 &&
+                                  loggedInUsername != null &&
+                                  leaderboard.name == loggedInUsername
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       )),
-                      DataCell(Text(leaderboard.device)),
-                      DataCell(Text(leaderboard.score.toString())),
+                      DataCell(Text(leaderboard.device,
+                          style: TextStyle(
+                            fontWeight: index == 0 &&
+                                    loggedInUsername != null &&
+                                    leaderboard.name == loggedInUsername
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ))),
+                      DataCell(Text(leaderboard.score.toString(),
+                          style: TextStyle(
+                            fontWeight: index == 0 &&
+                                    loggedInUsername != null &&
+                                    leaderboard.name == loggedInUsername
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ))),
                     ],
                   );
                 }).toList(),
@@ -155,11 +185,14 @@ class Leaderboard extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasError) {
-          print("hello");
           return Text('${snapshot.error}');
         }
 
-        return const CircularProgressIndicator();
+        return const SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }
@@ -174,8 +207,6 @@ Future<List<LeaderboardEntry>> fetchLeaderboardData(
           'https://group8large-57cfa8808431.herokuapp.com/api/ReactionLeaderboard');
 
   final response = await http.post(uri);
-
-  print(response.body);
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);

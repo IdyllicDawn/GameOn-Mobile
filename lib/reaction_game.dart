@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 class ReactionGame extends StatefulWidget {
   final String? loggedInUsername;
@@ -123,7 +124,7 @@ class ReactionGameState extends State<ReactionGame> {
       body: jsonEncode({
         'username': username,
         'time': time,
-        'date': DateTime.now().toString(),
+        'date': DateFormat('MM-dd-yyyy').format(DateTime.now()).toString(),
         'device': 'Phone'
       }),
       headers: {'Content-Type': 'application/json'},
