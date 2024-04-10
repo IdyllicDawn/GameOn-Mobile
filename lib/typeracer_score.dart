@@ -4,7 +4,6 @@ import 'package:GameOn/main_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'typeracer_game.dart';
-import 'main_page.dart';
 
 class TypingScoreScreen extends StatefulWidget {
   final String? loggedInUsername;

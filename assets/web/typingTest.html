@@ -79,7 +79,6 @@
         // Function to send a message to Flutter
         function sendMessageToFlutter(message) {
             messageHandler.postMessage(message);
-            userInputRef.current.focus();
         }
         sendMessageToFlutter('WhatUsername?');
         //flutter wull send the username to the webview
@@ -344,7 +343,7 @@
                     const wpmCalc = correctChars / 5; // Average word length = 5 chars
                     const score = correctChars - numMistakes;
                     //send score , wpm, accuracy to flutter
-                    sendMessageToFlutter(`Score,WPM,Accuracy: ${score},${wpmCalc.toFixed(2)},${accuracyCalc.toFixed(2)}`);
+                    sendMessageToFlutter('SCORE:' + score + ' WPM:' + wpmCalc.toFixed(2) + ' ACCURACY:' + accuracyCalc.toFixed(2));
                 }
             }, [timer, validatedInputHistory, numMistakes]);
 

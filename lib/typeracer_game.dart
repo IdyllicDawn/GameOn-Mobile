@@ -25,44 +25,38 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       ..addJavaScriptChannel(
         "messageHandler",
         onMessageReceived: (JavaScriptMessage javaScriptMessage) {
-          print("Message from the web view=\"${javaScriptMessage.message}\"");
+          message = javaScriptMessage.message;
+          print("Message from the web view=\"${message}\"");
           //if the message is WhatUsername, pass the username to the HTML
           //if logged in username is not null, pass it to the HTML
-          if (javaScriptMessage.message == "WhatUsername?" &&
-              widget.loggedInUsername != null) {
+          if (message == "WhatUsername?" && widget.loggedInUsername != null) {
+            print("Passing username to HTML");
             passUsernameToHTML();
-          } else {
-            setState(() {
-              message = javaScriptMessage.message;
-            });
-            //if the message containes "score" parse the data into respective variables
-            //example message :"Score,WPM,Accuracy: score,wpm,accuracy"
-            if (message.contains("Score,WPM,Accuracy:")) {
-              print("Score received");
-              List<String> scoreData = message.split(":")[1].split(",");
-              int score = int.parse(scoreData[0]);
-              print("Score: $score");
-              double wpm = double.parse(scoreData[1]);
-              print("WPM: $wpm");
-              double accuracy = double.parse(scoreData[2]);
-              print("score: $score, wpm: $wpm, accuracy: $accuracy");
-              //switch to the TypingScoreScreen with the score data
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TypingScoreScreen(
-                    loggedInUsername: widget.loggedInUsername,
-                    score: score.toInt(),
-                    wpm: wpm.toDouble(),
-                    accuracy: accuracy.toDouble(),
-                  ),
+          }
+          print("checking for score");
+          if (message.contains("SCORE:")) {
+            print("i got the score${message}\"");
+            //data example SCORE:27 WPM:14.80 ACCURACY:61.16"
+            List<String> data = javaScriptMessage.message.split(" ");
+            double score = double.parse(data[0].split(":")[1]);
+            double wpm = double.parse(data[1].split(":")[1]);
+            double accuracy = double.parse(data[2].split(":")[1]);
+            print("score: $score, wpm: $wpm, accuracy: $accuracy");
+            //switch to the TypingScoreScreen with the score data
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TypingScoreScreen(
+                  loggedInUsername: widget.loggedInUsername,
+                  score: score.toInt(),
+                  wpm: wpm.toDouble(),
+                  accuracy: accuracy.toDouble(),
                 ),
-              );
-            }
+              ),
+            );
           }
         },
       );
-
     super.initState();
   }
 
