@@ -60,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
      }
 
       if (cred && valid){
-        print("VALID");
         isButtonEnabled = false;
         _verifyText = "";
         Navigator.pushReplacement(
@@ -77,11 +76,9 @@ class _LoginPageState extends State<LoginPage> {
         _error = "Account Not Verified";
         _hasError = true;
         });
-        print("not valid");
       }
       else
       {
-        print("NOT VALID and null");
         setState(() {
           print("Invalid username or password");
           _error = 'Invalid username/password combination.';
@@ -108,15 +105,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String> getEmail(String username) async {
-    print("Username is of type: ");
-    print(username.runtimeType);
   final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/userCheck'); // Replace with your API endpoint
   final response = await http.post(
     url,
     body: jsonEncode({'username': username}),
     headers: {'Content-Type': 'application/json'},
   );
-  print("USER: $username");
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
     final results = data['result'];

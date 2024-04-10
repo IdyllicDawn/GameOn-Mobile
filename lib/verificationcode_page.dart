@@ -93,7 +93,6 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                   );
                   final data = jsonDecode(response.body);
                   final results = data['error'];
-                  print("RESULTS: $results");
                   if (results == "")
                   {
                     print("ACCOUNT VERIFIED!");

@@ -59,7 +59,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   void sendEmail(emailR) async {
-  const message = '\nPlease click the link below to reset your password:\n';
+  const message = '\nPlease click the link below to reset your password:\n\nhttps://group8large-57cfa8808431.herokuapp.com/forgotpassword';
   const serviceId = 'service_lp2038n';
   const templateId = 'template_sxd4kie';
   const publicKey = 'eUOYcmbkqPktXlIjF';
