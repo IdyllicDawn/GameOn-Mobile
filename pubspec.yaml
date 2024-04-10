@@ -101,6 +101,8 @@ flutter:
    - images/ReactionGame.gif
    - images/TypingGame.gif
    - images/NewLogo.jpg
+   - images/BlueLogo.png
+   - images/BlackLogo.png
    - assets/web/typingTest.html
 
   #   - images/a_dot_ham.jpeg

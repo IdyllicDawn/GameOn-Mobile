@@ -171,12 +171,12 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 60.0),
+                padding: const EdgeInsets.only(top: 60.0, bottom: 40.0),
                 child: Center(
                   child: SizedBox(
                     width: 200,
                     height: 150,
-                    child: Image.asset('images/GameOnLogo.png'),
+                    child: Image.asset('images/BlackLogo.png'),
                   ),
                 ),
               ),

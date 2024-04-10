@@ -14,7 +14,7 @@ class GameOn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GameOn!',
+      title: 'GameOn',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
