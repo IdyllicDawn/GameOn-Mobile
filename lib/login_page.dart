@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:GameOn/resetpass_page.dart';
+import 'package:GameOn/verificationcode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'main_page.dart';
@@ -16,12 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _error;
+  String _verifyText = "";
   bool _hasError = false;
+  bool isButtonEnabled = false;
+  String? globalEmail;
 
   Future<void> _login() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
-
+    globalEmail = await getEmail(username);
     final url =
         Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/users');
     final response = await http.post(
@@ -34,22 +38,62 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final id = data['id'];
+      final v = data['error'];
+      bool cred = false;
+      bool valid = false;
+      if(v == "")
+      {
+        cred = true;
+      }
+      final u =
+        Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/userCheck');
 
-      if (id != -1) {
+      final res = await http.post(u,
+      body: jsonEncode({'username': username}),
+      headers: {'Content-Type': 'application/json'},);
+
+     final d = jsonDecode(res.body);
+     final resul = d["result"];
+     if(resul.isNotEmpty)
+     {
+      valid = resul[0]['Validate'];
+     }
+
+      if (cred && valid){
+        print("VALID");
+        isButtonEnabled = false;
+        _verifyText = "";
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => HomePage(loggedInUsername: username)),
-        );
-      } else {
+        );  
+      }
+      else if (cred && !valid)
+      {
         setState(() {
+          isButtonEnabled = true;
+        _verifyText = "Send Verification Link";
+        _error = "Account Not Verified";
+        _hasError = true;
+        });
+        print("not valid");
+      }
+      else
+      {
+        print("NOT VALID and null");
+        setState(() {
+          print("Invalid username or password");
           _error = 'Invalid username/password combination.';
           _hasError = true;
         });
+        return;
       }
-    } else {
-      setState(() {
+    }
+    else
+    {
+        setState(() {
+        print("error logging in");
         _error = 'There was an error logging in. Please try again.';
         _hasError = true;
       });
@@ -62,6 +106,52 @@ class _LoginPageState extends State<LoginPage> {
       MaterialPageRoute(builder: (context) => const HomePage(loggedInUsername: null)),
     );
   }
+
+  Future<String> getEmail(String username) async {
+    print("Username is of type: ");
+    print(username.runtimeType);
+  final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/userCheck'); // Replace with your API endpoint
+  final response = await http.post(
+    url,
+    body: jsonEncode({'username': username}),
+    headers: {'Content-Type': 'application/json'},
+  );
+  print("USER: $username");
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final results = data['result'];
+
+    // Check if results array is not empty
+    if (results.isNotEmpty) {
+      String email = results[0]["Email"];
+      return email;
+    } else {
+      throw Exception('User not found');
+    }
+  } else {
+    throw Exception('Failed to load user data');
+  }
+}
+
+  void sendEmail(String username) async {
+  final em = await getEmail(username);
+  final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/send-email');
+  final response = await http.post(
+    url,
+    body: jsonEncode({
+      'emailR': em,
+      'username': username,
+    }),
+    headers: {'Content-Type': 'application/json'} 
+  );
+  print(response);
+
+  if (response.statusCode == 200) {
+    print('Email sent successfully');
+  } else {
+    print('Error sending email: ${response.body}');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +295,26 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ],
-              )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: isButtonEnabled ? () {
+                        sendEmail(_usernameController.text);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VerificationCodePage(loggedInEmail: globalEmail),
+                      ));
+                      } : null,
+                      child: Text(
+                      _verifyText,
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    ),
+                ],
+              ),
             ],
           ),
         ),
