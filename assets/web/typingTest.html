@@ -341,7 +341,7 @@
                     const correctChars = validatedInputHistory.filter(entry => entry.isCorrect).length;
                     const accuracyCalc = totalTypedChars > 0 ? (correctChars / totalTypedChars) * 100 : 0;
                     const wpmCalc = correctChars / 5; // Average word length = 5 chars
-                    const score = correctChars - numMistakes;
+                    const score = wpmCalc*accuracyCalc;
                     //send score , wpm, accuracy to flutter
                     sendMessageToFlutter('SCORE:' + score + ' WPM:' + wpmCalc.toFixed(2) + ' ACCURACY:' + accuracyCalc.toFixed(2));
                 }
