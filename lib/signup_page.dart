@@ -1,11 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 // Above statement is IDE yelling at me for using context in async function eg showDialog(context: context,
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'main_page.dart';
 import 'login_page.dart';
+import 'package:GameOn/verificationcode_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -168,11 +168,17 @@ class SignupPageState extends State<SignupPage> {
       final error = data['error'];
 
       if (error.isEmpty) {
-        Navigator.pushReplacement(
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => HomePage(loggedInUsername: username)),
+        // );
+        sendEmail(_usernameController.text);
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage(loggedInUsername: username)),
-        );
+              builder: (context) => VerificationCodePage(loggedInEmail: email),
+        ));
       } else {
         setState(() {
           _error = error;
@@ -193,6 +199,55 @@ class SignupPageState extends State<SignupPage> {
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
+
+  Future<String> getEmail(String username) async {
+  final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/userCheck'); 
+  final response = await http.post(
+    url,
+    body: jsonEncode({'username': username}),
+    headers: {'Content-Type': 'application/json'},
+  );
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final results = data['result'];
+
+    // Check if results array is not empty
+    if (results.isNotEmpty) {
+      String email = results[0]["Email"];
+      return email;
+    } else {
+      throw Exception('User not found');
+    }
+  } else {
+    throw Exception('Failed to load user data');
+  }
+}
+
+  void sendEmail(String username) async {
+  String em = "";
+    try {
+    em = await getEmail(username);
+  } catch (e) {
+    print('An error occurred: $e');
+  }
+
+  final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/send-email');
+  final response = await http.post(
+    url,
+    body: jsonEncode({
+      'emailR': em,
+      'username': username,
+    }),
+    headers: {'Content-Type': 'application/json'} 
+  );
+
+  if (response.statusCode == 200) {
+    print('Email sent successfully');
+  } else {
+    print('Error sending email: ${response.body}');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {

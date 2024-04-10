@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:GameOn/resetpass_page.dart';
 import 'package:GameOn/verificationcode_page.dart';
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       return;
     }
-    
+
     final url =
         Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/users');
     final response = await http.post(
@@ -48,13 +50,15 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final v = data['error'];
+      bool match = data['result'];
       bool cred = false;
       bool valid = false;
-      if(v == "")
+      if(match)
       {
         cred = true;
       }
+
+      try{
       final u =
         Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/userCheck');
 
@@ -66,10 +70,19 @@ class _LoginPageState extends State<LoginPage> {
      final resul = d["result"];
      if(resul.isNotEmpty)
      {
+      print("result: $resul");
       valid = resul[0]['Validate'];
+     }}
+     catch(e)
+     {
+      print("An error occured $e");
      }
 
+
+      print("Cred: $cred");
+      print("Valid: $valid");
       if (cred && valid){
+        print("Valid creds provided");
         isButtonEnabled = false;
         _verifyText = "";
         Navigator.pushReplacement(
@@ -80,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
       }
       else if (cred && !valid)
       {
+        print("Account Not validated");
         setState(() {
           isButtonEnabled = true;
         _verifyText = "Send Verification Link";
@@ -138,7 +152,13 @@ class _LoginPageState extends State<LoginPage> {
 }
 
   void sendEmail(String username) async {
-  final em = await getEmail(username);
+  String em = "";
+    try {
+    em = await getEmail(username);
+  } catch (e) {
+    print('An error occurred: $e');
+  }
+
   final url = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/send-email');
   final response = await http.post(
     url,
@@ -148,7 +168,6 @@ class _LoginPageState extends State<LoginPage> {
     }),
     headers: {'Content-Type': 'application/json'} 
   );
-  print(response);
 
   if (response.statusCode == 200) {
     print('Email sent successfully');
@@ -252,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ResetPasswordPage()),
+                            builder: (context) => const ResetPasswordPage()),
                       );
                     },
                     child: const Text(

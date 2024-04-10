@@ -1,13 +1,17 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:GameOn/login_page.dart';
 
 class VerificationCodePage extends StatefulWidget {
   final String? loggedInEmail;
 
-  const VerificationCodePage({Key? key, required this.loggedInEmail}) : super(key: key);
+  const VerificationCodePage({super.key, required this.loggedInEmail});
 
   @override
+  // ignore: library_private_types_in_public_api
   _VerificationCodePageState createState() => _VerificationCodePageState();
 }
 
@@ -100,6 +104,12 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                       _err = "Account Verified!";
                       msgColor = Colors.green;
                     });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
                   }
                   else
                   {

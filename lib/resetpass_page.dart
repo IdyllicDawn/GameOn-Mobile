@@ -4,7 +4,10 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
 
@@ -35,7 +38,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           _errorColor = Colors.green;
           
         });
-        Timer(Duration(seconds: 3), () {
+        Timer(const Duration(seconds: 3), () {
         setState(() {
           _error = '';
         });
@@ -65,7 +68,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   const publicKey = 'eUOYcmbkqPktXlIjF';
   final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
 
-  final response = await http.post(url,
+  await http.post(url,
   headers: {
     'origin' : 'http://localhost',
     'Content-Type' : 'application/json',

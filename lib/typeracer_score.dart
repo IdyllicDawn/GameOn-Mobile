@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print
 
+import 'package:flutter/material.dart';
 import 'package:GameOn/main_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

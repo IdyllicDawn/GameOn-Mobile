@@ -4,6 +4,7 @@ import 'bottombar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'typeracer_game.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+// ignore: implementation_imports
 import 'package:flutter/src/painting/gradient.dart' as flutter;
 import 'package:GameOn/reaction_game.dart';
 
