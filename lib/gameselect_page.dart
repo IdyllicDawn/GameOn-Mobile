@@ -16,8 +16,8 @@ class GameSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Game Select'),
-        backgroundColor: const Color.fromARGB(255, 87, 179, 255),
+        title: const Text('Gam  e Select', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),

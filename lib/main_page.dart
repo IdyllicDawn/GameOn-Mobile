@@ -1,5 +1,6 @@
 import 'package:GameOn/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,11 +23,11 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
-        backgroundColor: const Color.fromARGB(255, 87, 179, 255),
+        title: const Text('Home Page', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -56,7 +57,7 @@ class HomePageState extends State<HomePage> {
                     value: LeaderboardType.typing,
                     child: Text('Typing Leaderboard'),
                   ),
-                  DropdownMenuItem(
+                  DropdownMenuItem( 
                     value: LeaderboardType.reaction,
                     child: Text('Reaction Leaderboard'),
                   ),
