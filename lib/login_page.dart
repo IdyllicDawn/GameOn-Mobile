@@ -25,7 +25,17 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
+
+    try {
     globalEmail = await getEmail(username);
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _hasError = true;
+      });
+      return;
+    }
+    
     final url =
         Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/users');
     final response = await http.post(
