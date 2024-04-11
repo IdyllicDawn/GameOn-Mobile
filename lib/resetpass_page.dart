@@ -1,3 +1,4 @@
+import 'package:GameOn/passwordresetverify_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -38,9 +39,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           _errorColor = Colors.green;
           
         });
-        Timer(const Duration(seconds: 3), () {
+        Timer(const Duration(seconds: 1), () {
         setState(() {
           _error = '';
+
+          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PasswordResetVerifyPage(loggedInEmail: email,),
+                      ),
+                    );
         });
         });
       } else {
@@ -62,29 +70,19 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   void sendEmail(emailR) async {
-  const message = '\nPlease click the link below to reset your password:\n\nhttps://group8large-57cfa8808431.herokuapp.com/forgotpassword';
-  const serviceId = 'service_lp2038n';
-  const templateId = 'template_sxd4kie';
-  const publicKey = 'eUOYcmbkqPktXlIjF';
-  final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
 
-  await http.post(url,
-  headers: {
-    'origin' : 'http://localhost',
-    'Content-Type' : 'application/json',
-    'Authorization' : 'Bearer $publicKey'
-  },
-  body: json.encode({
-    'service_id' : serviceId,
-    'template_id' : templateId,
-    'user_id' : publicKey,
-    'template_params' : {
-      'user_subject' : 'GameOn Password Reset',
-      'user_email' : emailR,
-      'message' : message
+    try{
+    final ur = Uri.parse('https://group8large-57cfa8808431.herokuapp.com/api/send-email');
+    await http.post(
+      ur,
+      body: jsonEncode({'emailR': emailR}),
+      headers: {'Content-Type': 'application/json'},
+    );
     }
-  })
-  );
+    catch(e)
+    {
+      print("There was an error $e");
+    }
 }
 
   @override

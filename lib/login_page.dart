@@ -70,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
      final resul = d["result"];
      if(resul.isNotEmpty)
      {
-      print("result: $resul");
       valid = resul[0]['Validate'];
      }}
      catch(e)
@@ -78,11 +77,7 @@ class _LoginPageState extends State<LoginPage> {
       print("An error occured $e");
      }
 
-
-      print("Cred: $cred");
-      print("Valid: $valid");
       if (cred && valid){
-        print("Valid creds provided");
         isButtonEnabled = false;
         _verifyText = "";
         Navigator.pushReplacement(
